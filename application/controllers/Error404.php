@@ -12,13 +12,12 @@ class Error404 extends CI_Controller {
 
     //PAGE NOT FOUND PAGE
 	public function index(){
-		 $this->load->model('web_model');  
+		 //$this->load->model('web_model');  
 		$this->output->set_status_header('404');
 		$data['pageTitle']="Contact Us";
-		$data['contact']=$this->web_model->get_contact();
-		$this->load->view('parts/head',$data);
+		//$this->load->view('parts/head',$data);
 		$this->load->view('error404');		
-		$this->load->view('parts/bottom',$data);
+		//$this->load->view('parts/bottom',$data);
 
 
 	}

@@ -28,7 +28,7 @@
 
                                   <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal2">General Sales</button>
 
-                                  <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal3">Search Sales</button>
+                                  <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal3">Query Ticket</button>
                                   
                                 </div>
 
@@ -57,7 +57,7 @@
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                     </div>
                                                     <div class="modal-body">
-                                                       <form method="post" action="<?php echo base_url(); ?>daily-sales-reports-staff" target="_blank">
+                                                       <form method="post" action="<?php echo base_url(); ?>supervisor/sales_reports_day_staff" target="_blank">
                                                           
 
                                                             <div class="form-group">
@@ -108,7 +108,7 @@
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                     </div>
                                                     <div class="modal-body">
-                                                       <form method="post" action="<?php echo base_url(); ?>general-sales-reports-staff" target="_blank">
+                                                       <form method="post" action="<?php echo base_url(); ?>supervisor/sales_reports_day_general" target="_blank">
                                                             <div class="form-group">
                                                               <div class="input-group">
                                                                   <div class="input-group-addon"><i class="fa fa-calendar fa-fw"></i>Date</div>

@@ -11,11 +11,10 @@ echo'
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <link href="'.base_url().'assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="'.base_url().'assets/css/icons.css" rel="stylesheet" type="text/css" />
-         <link href="'.base_url().'assets/plugins/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-         <link href="'.base_url().'assets/css/animate.css" rel="stylesheet" type="text/css" />
+        
+         
          <link href="'.base_url().'assets/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-         <link href="'.base_url().'assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-         <link href="'.base_url().'assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+         
         <link href="'.base_url().'assets/css/style.css" rel="stylesheet" type="text/css" />
     </head>
 
@@ -34,7 +33,7 @@ echo'
 
 
                     <div class="menu-extras topbar-custom">
-
+                   
                         
 
                         <ul class="list-inline float-right mb-0">
@@ -45,9 +44,10 @@ echo'
                                 <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
                                    aria-haspopup="false" aria-expanded="false">
                                     <img src="assets/images/user.png" alt="user" class="rounded-circle">
+                                '.strtoupper($_SESSION["name"]).'
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                    <a class="dropdown-item" href="#"><i class="dripicons-user text-muted"></i> Profile</a>
+                                    <a class="dropdown-item" href="'.base_url().'cashier-profile"><i class="dripicons-user text-muted"></i> Profile</a>
                                    <a class="dropdown-item" href="'.base_url().'logout"><i class="dripicons-exit text-muted"></i> Logout</a>
                                 </div>
                             </li>
@@ -85,6 +85,10 @@ echo'
                             </li>
                             <li class="has-submenu">
                                 <a href="'.base_url().'query"><i class="ti-search"></i>Query Ticket</a>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="'.base_url().'change"><i class="ti-money"></i>Change</a>
                             </li>
 
                          

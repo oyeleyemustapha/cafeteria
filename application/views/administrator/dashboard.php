@@ -17,42 +17,34 @@
 
 
                 <div class="row">
-                    <div class="col-md-6 col-xl-3">
+                    <div class="col-md-6 col-xl-4">
                         <div class="mini-stat clearfix bg-white">
                             <span class="mini-stat-icon bg-light"><i class="fa fa-money text-danger"></i></span>
                             <div class="mini-stat-info text-right text-muted">
-                                <span class="counter text-danger"> &#8358; <?php echo $dailyReport['SALES']; ?></span>
-                                Daily Sales
+                                <span class="counter text-danger"> &#8358; <?php echo number_format($dailyReport['SALES']); ?></span>
+                                Daily Sales [<?php echo date('F d, Y');?>]
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-xl-3">
+                    <div class="col-md-6 col-xl-4">
                         <div class="mini-stat clearfix bg-info">
                             <span class="mini-stat-icon bg-light"><i class="fa fa-money text-success"></i></span>
                             <div class="mini-stat-info text-right text-white">
-                                <span class="counter text-white">&#8358; <?php echo $dailyReport['PROFIT']; ?></span>
-                                Daily Profits
+                                <span class="counter text-white"><?php echo $dailyOrders; ?> Orders</span>
+                                <?php echo date('F d, Y');?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-xl-3">
+                    <div class="col-md-6 col-xl-4">
                         <div class="mini-stat clearfix bg-white">
                             <span class="mini-stat-icon bg-light"><i class="fa fa-money text-warning"></i></span>
                             <div class="mini-stat-info text-right text-muted">
-                                <span class="counter text-warning">&#8358; <?php echo $monthReport['SALES']; ?></span>
-                                Monthly Sales
+                                <span class="counter text-warning">&#8358; <?php echo number_format($monthReport['SALES']) ; ?></span>
+                                Sales for <?php echo date('F');?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-xl-3">
-                        <div class="mini-stat clearfix bg-info">
-                            <span class="mini-stat-icon bg-light"><i class="fa fa-money text-info"></i></span>
-                            <div class="mini-stat-info text-right text-light">
-                                <span class="counter text-white">&#8358; <?php echo $monthReport['PROFIT']; ?></span>
-                                Monthly Profits
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
 
                 <div class="row">

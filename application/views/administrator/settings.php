@@ -23,7 +23,12 @@
                     <div class="col-md-12">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <h4 class="mt-0 header-title"><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal">Change Cafeteria Name</button></h4>
+                                <h4 class="mt-0 header-title">
+
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal">Change Cafeteria Name</button>
+
+                                    <a href="<?php echo base_url() ?>export-records" target="_blank" class="btn btn-info btn-sm">Export Records</a>
+                                </h4>
 
                                
                                 <?php

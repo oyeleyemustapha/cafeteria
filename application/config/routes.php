@@ -16,6 +16,10 @@ $route['logout']='cafeteria/logout';
 //ADMINISTRATOR
 $route['administrator']="administrator/index";
 
+//ADMINISTRATOR
+$route['supervisor']="supervisor/index";
+
+
 
 $route['staff']="administrator/staff";
 $route['fetchStafflist']="administrator/fetch_staff_list";
@@ -24,11 +28,11 @@ $route['deleteStaff']="administrator/delete_staff";
 $route['fetchStaff']="administrator/fetch_staff_info";
 $route['updateStaff']="administrator/update_staff";
 
-
-
+$route['export-records']="administrator/export_records";
+$route['left-over']="administrator/fetch_leftover";
 $route['logs']="administrator/logs";
 $route['fetchLogs']="administrator/fetch_logs";
-
+$route['purge-record']="administrator/clear_logs";
 //PRODUCTS
 $route['products']="administrator/products";
 $route['addProduct']="administrator/add_product";
@@ -64,10 +68,21 @@ $route['daily-sales-reports-staff']="administrator/sales_reports_day_staff";
 $route['general-sales-reports-staff']="administrator/sales_reports_day_general";
 $route['search-sales']="administrator/sales_records_order_no";
 $route['cancel-all-orders']="administrator/cancel_all_orders";
-
+$route['cancel-product-order']="administrator/cancel_product_order";
 
 //CASHIER
 $route['cashier']="cashier/index";
 
 
 $route['query']="cashier/query";
+$route['cashier-profile']="cashier/my_profile";
+
+
+$route['take-order']="administrator/order_page";
+
+
+//CHANGE
+$route['change']="cashier/change";
+
+$route['change-administrator']="administrator/change";
+$route['change-report-individual']="administrator/change_report_individual";

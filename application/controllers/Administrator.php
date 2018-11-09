@@ -6,6 +6,7 @@ class Administrator extends CI_Controller {
 	public function __construct(){
         parent::__construct();
         $this->load->model('cafeteria_model');  
+         $this->load->model('cashier_model');  
 
     }	
 
@@ -27,6 +28,7 @@ class Administrator extends CI_Controller {
 		$data['title']=$this->cafeteria_model->fetch_cafeteria()->NAME." :: Dashboard";
 		$data['dailyReport']=$this->daily_sales_reports_dashboard();
 		$data['monthReport']=$this->monthly_sales_reports_dashboard();
+		$data['dailyOrders']=$this->cafeteria_model->fetch_no_order();
 		$this->load->view('administrator/parts/head', $data);
 		$this->load->view('administrator/dashboard', $data);
 		$this->load->view('administrator/parts/bottom', $data);
@@ -242,8 +244,8 @@ class Administrator extends CI_Controller {
 		$this->form_validation->set_rules('salesPrice', 'Sales Price', 'required|numeric');
 		if($this->form_validation->run()){
 			$product=array(
-				'PRODUCT'=>trim($this->input->post('product')),
-				'LABEL_NAME'=>trim($this->input->post('labelname')),
+				'PRODUCT'=>ucwords(trim($this->input->post('product'))),
+				'LABEL_NAME'=>ucwords(trim($this->input->post('labelname'))),
 				'COST_PRICE'=>trim($this->input->post('costPrice')),
 				'SALES_PRICE'=>trim($this->input->post('salesPrice'))
 			);
@@ -307,8 +309,8 @@ class Administrator extends CI_Controller {
 		if($this->form_validation->run()){
 			$product=array(
 				'PRODUCT_ID'=>$this->input->post('product_id'),
-				'PRODUCT'=>trim($this->input->post('product')),
-				'LABEL_NAME'=>trim($this->input->post('labelname')),
+				'PRODUCT'=>ucwords(trim($this->input->post('product'))),
+				'LABEL_NAME'=>ucwords(trim($this->input->post('labelname'))),
 				'COST_PRICE'=>trim($this->input->post('costPrice')),
 				'SALES_PRICE'=>trim($this->input->post('salesPrice'))
 			);
@@ -783,18 +785,120 @@ class Administrator extends CI_Controller {
 			if($this->cafeteria_model->cancel_orders_all($this->input->post('order_no'))){
 				echo "Orders has been canceled";
 			}
-			
+		}		
+	}
+
+
+	//CANCEL SPECIFIC PRODUCT ORDER
+	public function cancel_product_order(){
+		$this->verify();
+		$this->load->library('form_validation');
+			$this->form_validation->set_rules('sales_id', 'Sales ID', 'required|numeric');
+		if($this->form_validation->run()){
+			if($this->cafeteria_model->cancel_specific_order($this->input->post('sales_id'))){
+				echo "Order has been canceled";
+			}
+		}		
+	}
+
+
+	 //DASHBOARD
+	public function order_page(){
+		$this->verify();
+		$data['title']=$this->cafeteria_model->fetch_cafeteria()->NAME." :: Take Order";
+		$data['cafeteria']=$this->cafeteria_model->fetch_cafeteria()->NAME;
+		$this->load->view('administrator/parts/head', $data);
+		$this->load->view('administrator/order/order', $data);
+		$this->load->view('administrator/parts/bottom', $data);
+	}
+	
+
+
+	//CLEAR LOGIN LOGS
+	public function clear_logs(){
+		$this->verify();
+		if($this->cafeteria_model->clear_logs()){
+			echo "Logs has been cleared";
 		}
+	}
+
+
+	//EXPORT RECORDS IN CSV
+	public function export_records(){
+		$this->verify();
+		$this->load->dbutil();
+		$this->load->helper('file');
+		$this->load->helper('download');
+		$this->load->library('zip');
+		$database_tables=['logs', 'products', 'products_to_sell', 'sales', 'setting', 'staff'];
+		foreach ($database_tables as $tables) {
+			$query = $this->db->query("SELECT * FROM ".$tables);
+			$data=$this->dbutil->csv_from_result($query);
+			write_file('backup/'.$tables.'-'.date("F-d-Y").'.csv', $data);
+		}
+		$this->zip->read_dir('backup', TRUE);
+		delete_files('backup/');
+		$this->zip->download('Record-'.date("F-d-Y").'.zip');
+	}
+
+
+	//FETCH LEFT OVER RECORDS
+	public function fetch_leftover(){
+		$this->verify();
+		$this->load->library('form_validation');
+			$this->form_validation->set_rules('date', 'Date', 'required');
+		if($this->form_validation->run()){
+			$data['cafeteria']=$this->cafeteria_model->fetch_cafeteria()->NAME;
+			$date=date('Y-m-d', strtotime($this->input->post('date')));
+			$data['report']=$this->cafeteria_model->fetch_sales_product_list($date);
+			$this->load->view('administrator/reports/leftover', $data);
+
 			
-			
+		}	
 	}
 
 
 
+	//==============================
+    //==============================
+    //CHANGE
+    //==============================
+    //==============================
+
+	public function change(){
+		$this->verify();
+		$data['title']=$this->cafeteria_model->fetch_cafeteria()->NAME." :: Change";
+		$data['year']=$this->list_year();
+		$data['month']=$this->list_month();
+		$data['staffList']=$this->staff_list();
+		$this->load->view('administrator/parts/head',$data);
+		$this->load->view('administrator/change/change',$data);
+		$this->load->view('administrator/parts/bottom',$data);
+	}
+
+
+	//FETCH INDIVIDUAL CHANGE REPORT BASED ON CHANGE STATUS
+	public function change_report_individual(){
+		$this->verify();
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('status', 'Status', 'required');
+		$this->form_validation->set_rules('staff', 'Staff', 'required');
+		if($this->form_validation->run()){
+			$report=array(
+				'STATUS'=> $this->input->post('status'),
+				'CREATED_BY'=>$this->input->post('staff')
+			);
+
+			$data['report']=$this->cafeteria_model->change_report_individual($report);
+			$this->load->view('administrator/change/individualReportStatus', $data);
+		}		
+	}
+	
 
 	
 
 
+	
 
 
 

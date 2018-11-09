@@ -49,6 +49,7 @@
  		$this->db->where('USERNAME', $username);
  		$this->db->where('PASSWORD', $password);
  		$this->db->where('ROLE', 'Cashier');
+ 		//$this->db->or_where('ROLE', 'Administrator');
  		$query= $this->db->get();
  		if ($query->num_rows()==1) {
  			return true;
@@ -162,6 +163,141 @@
  		}
  		else{
  			return false;
+ 		}
+ 	}
+
+ 	//GET CASHIER SALES FOR THE DAY
+ 	public function cashier_sales_day($staff_id){
+ 		$this->db->select('SUM(AMOUNT) AS TOTAL');
+ 		$this->db->from('sales');
+ 		$this->db->where('STAFF_ID', $staff_id);
+ 		$this->db->where('SALES_DATE', date('Y-m-d'));
+ 		$this->db->where('STATUS', "Confirmed");
+ 		$query=$this->db->get();
+ 		
+ 			if($query->row()->TOTAL!=null){
+ 				return $query->row()->TOTAL;
+ 			}
+ 			else{
+	 			return 0;
+	 		}
+	}
+
+	//UPDATE PASSWORD
+	public function update_password($password){
+		$this->db->set('PASSWORD', $password);
+ 		$this->db->where('STAFF_ID', $_SESSION['staff_id']);
+		if($this->db->update('staff')){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+
+
+	//create pin for change
+ 	function create_pin($pinData){
+ 		$this->db->select('PIN');
+ 		$this->db->from('pin');
+ 		$this->db->where('PIN', $pinData['PIN']);
+ 		$query=$this->db->get();
+ 		if ($query->num_rows()==1) {
+ 			$pin=& get_instance();
+ 			$pinData['PIN']=$pin->pinGenerator();
+ 		}
+ 		
+ 			if($this->db->insert('pin', $pinData)){
+ 				return $pinData['PIN'];
+	 		}
+	 		else{
+	 			return "There is a Problem Generating Pin";
+	 		}
+ 	}
+
+ 	//FETCH PIN
+ 	function fetch_pin($pin){
+ 		$this->db->select('pin.NAME, pin.DATE_CREATED, staff.NAME staff, pin.PIN');
+ 		$this->db->from('pin');
+ 		$this->db->join('staff', 'pin.CREATED_BY=staff.STAFF_ID', 'left');
+ 		$this->db->where('pin.PIN', $pin);
+ 		$query=$this->db->get();
+ 		if($query->num_rows()==1){
+ 			return $query->row();
+ 		}
+ 	}
+
+ 	//FETCH PIN  INFO
+ 	function search_pin($pin){
+ 		$this->db->select('pin.ID, pin.NAME NAME, pin.PIN, pin.PHONE, pin.AMOUNT, pin.DATE_CREATED DATE_CREATED, pin.STATUS STATUS, pin.DATE_CLEARED,pin.CLEARED_BY, staff.NAME STAFF_CREATED');
+ 		$this->db->from('pin');
+ 		$this->db->join('staff', 'pin.CREATED_BY=staff.STAFF_ID', 'left');
+ 		$this->db->where('pin.PIN', $pin);
+ 		$query=$this->db->get();
+ 		if($query->num_rows()==1){
+ 			return $query->row();
+ 		}
+ 	}
+
+
+ 	//GET STAFF NAME
+ 	function staff_name($id){
+ 		$this->db->select('NAME');
+ 		$this->db->from('staff');
+ 		$this->db->where('STAFF_ID', $id);
+ 		$query=$this->db->get();
+ 		return $query->row();
+ 	}
+
+
+ 	//CLEAR CHANGE
+ 	function pay_change($pin_id){
+ 		$this->db->set('DATE_CLEARED', date('Y-m-d H:i:s'));
+ 		$this->db->set('CLEARED_BY', $_SESSION['staff_id']);
+ 		$this->db->set('STATUS', 'PAID');
+ 		$this->db->where('ID', $pin_id);
+ 		if($this->db->update('pin')){
+ 			return "Change has been paid for this pin";
+ 		}
+ 		else{
+ 			return"There is an error paying Change";
+ 		}
+ 	}
+
+
+
+ 	//CHANGES NOT PAID BY STAFF FOR THE CURRENT DATE
+ 	function change_not_paid_by_staff_day($staff_id){
+ 		$this->db->select('SUM(AMOUNT) AMOUNT');
+ 		$this->db->from('pin');
+ 		$this->db->where('CREATED_BY', $staff_id);
+ 		$this->db->where('STATUS', 'NOT PAID');
+ 		$this->db->where('DATE(DATE_CREATED)', date('Y-m-d'));
+ 		$query=$this->db->get();
+ 		if($query->row()->AMOUNT){
+ 			return $query->row()->AMOUNT;
+ 		}
+ 		else{
+ 			return 0;
+ 		}
+ 		
+ 	}
+
+ 
+ 	//CHANGES NOT PAID BY STAFF FOR THE CURRENT MONTH
+ 	function change_not_paid_by_staff_month($staff_id){
+ 		$this->db->select('SUM(AMOUNT) AMOUNT');
+ 		$this->db->from('pin');
+ 		$this->db->where('CREATED_BY', $staff_id);
+ 		$this->db->where('STATUS', 'NOT PAID');
+ 		$this->db->where('MONTH(DATE_CREATED)', date('m'));
+ 		$query=$this->db->get();
+ 		if($query->row()->AMOUNT){
+ 			return $query->row()->AMOUNT;
+ 		}
+ 		else{
+ 			return 0;
  		}
  	}
 

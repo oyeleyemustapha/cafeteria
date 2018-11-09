@@ -45,9 +45,11 @@ echo'
                                 <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
                                    aria-haspopup="false" aria-expanded="false">
                                     <img src="assets/images/user.png" alt="user" class="rounded-circle">
+
+                                    '.$_SESSION["name"].'
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                    <a class="dropdown-item" href="#"><i class="dripicons-user text-muted"></i> Profile</a>
+                                    
                                    <a class="dropdown-item" href="'.base_url().'logout"><i class="dripicons-exit text-muted"></i> Logout</a>
                                 </div>
                             </li>
@@ -80,8 +82,18 @@ echo'
                         <!-- Navigation Menu-->
                         <ul class="navigation-menu">
 
+
+
                             <li class="has-submenu">
                                 <a href="'.base_url().'administrator"><i class="ti-home"></i>Dashboard</a>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="'.base_url().'change-administrator"><i class="ti-money"></i>Change</a>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="'.base_url().'take-order"><i class="ti-shopping-cart-full"></i>Order</a>
                             </li>
 
                             <li class="has-submenu">

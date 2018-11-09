@@ -53,11 +53,8 @@
                  else{
                     echo '<h4 class="text-center">Sales Reports for '.date('F d, Y').'</h4>';
                  }
-
-    echo'
-    <h5 class="text-center">Cashier : '.$report[0]->NAME.'</h5>
-
-        <table class="table table-bordered table-condensed table-hover productList">
+   
+        echo'<table class="table table-bordered table-condensed table-hover productList">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -65,6 +62,7 @@
                                             <th>AMOUNT</th>
                                             <th>QUANTITY SOLD</th>
                                             <th>ORDER NO</th>
+                                            <th>CASHIER</th>
                                             <th>STATUS</th>
                                         </tr>
                                     </thead>
@@ -92,10 +90,10 @@
                                             <tr>
                                                 <td>$counter</td>
                                                 <td>$product->PRODUCT</td>
-                                                <td>&#8358; $amount</td>
+                                                <td>&#8358; ".number_format($amount)."</td>
                                                 <td>$product->QUANTITY_SOLD</td>
                                                 <td>$product->ORDER_NO</td>
-                                             
+                                                <td>$product->NAME</td>
                                                 <td>$status</td>
                                                 
                                                
@@ -109,8 +107,8 @@
                                     echo'</tbody>
                                 </table>
 
-                                <h5>TOTAL AMOUNT : &#8358; '.$total_amt.' </h5>
-                                <h5>PROFIT : &#8358; '.$total_profit.' </h5>
+                                <h5>TOTAL AMOUNT : &#8358; '.number_format($total_amt).' </h5>
+                                <h5>PROFIT : &#8358; '.number_format($total_profit).' </h5>
 
 
 

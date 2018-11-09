@@ -28,7 +28,7 @@
 
                                   <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal2">General Sales</button>
 
-                                  <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal3">Search Sales</button>
+                                  <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal3">Query Ticket</button>
                                   
                                 </div>
 

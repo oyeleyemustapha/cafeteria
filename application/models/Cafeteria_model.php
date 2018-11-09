@@ -227,8 +227,12 @@
  		$this->db->where('DATE_ADDED', $product['DATE_ADDED']);
  		$query=$this->db->get();
  		if($query->num_rows()==1){
- 			return false;
- 		}
+ 			$sales_quantity=$product['QUANTITY'];
+	 		$this->db->set('QUANTITY', "QUANTITY+$sales_quantity", FALSE);
+	 		$this->db->where('PRODUCT_ID', $product['PRODUCT_ID']);
+ 			$this->db->where('DATE_ADDED', $product['DATE_ADDED']);
+			$this->db->update('products_to_sell');	
+ 		}      
  		else{
  			if($this->db->insert('products_to_sell', $product)){
 	 			return true;
@@ -255,6 +259,10 @@
  			return false;
  		}
  	}
+
+
+
+ 	
 
 
  	//FETCH PRODUCT INFO
@@ -303,6 +311,7 @@
  		$this->db->from('sales');
  		$this->db->join('products', 'products.PRODUCT_ID=sales.PRODUCT_ID', 'left');
  		$this->db->where('sales.SALES_DATE', date('Y-m-d'));
+ 		$this->db->where('sales.STATUS','Confirmed');
  		$this->db->group_by('sales.PRODUCT_ID');
  		$query=$this->db->get();
  		if($query->num_rows()>0){
@@ -320,6 +329,7 @@
  		$this->db->from('sales');
  		$this->db->join('products', 'products.PRODUCT_ID=sales.PRODUCT_ID', 'left');
  		$this->db->where('sales.SALES_DATE', $date);
+ 		$this->db->where('sales.STATUS', 'Confirmed');
  		$this->db->group_by('sales.PRODUCT_ID');
  		$query=$this->db->get();
  		if($query->num_rows()>0){
@@ -350,6 +360,7 @@
  			$this->db->where('sales.SALES_DATE', date('Y-m-d'));
  		}
  		$this->db->where('sales.STAFF_ID', $report['STAFF_ID']);
+ 		$this->db->where('sales.STATUS', 'Confirmed');
  		$query=$this->db->get();
  		if($query->num_rows()>0){
  			return $query->result();
@@ -376,6 +387,7 @@
  		
  		$this->db->order_by('sales.STAFF_ID', 'DESC');
  		$this->db->order_by('staff.NAME', 'DESC');
+ 		$this->db->where('sales.STATUS', 'Confirmed');
  		$query=$this->db->get();
  		if($query->num_rows()>0){
  			return $query->result();
@@ -388,7 +400,7 @@
 
  	//FETCH SALES RECORD BASED ON ORDER NUMBER
  	function sales_records_order_no($order_no){
- 		$this->db->select('products.PRODUCT, sales.AMOUNT, sales.SALES_DATE, sales.ORDER_NO,, sales.SALES_ID, sales.QUANTITY_SOLD, staff.NAME, sales.STATUS');
+ 		$this->db->select('sales.SALES_ID, products.PRODUCT, sales.AMOUNT, sales.SALES_DATE, sales.ORDER_NO,, sales.SALES_ID, sales.QUANTITY_SOLD, staff.NAME, sales.STATUS');
  		$this->db->from('sales');
  		$this->db->join('products', 'products.PRODUCT_ID=sales.PRODUCT_ID', 'left');
  		$this->db->join('staff', 'sales.STAFF_ID=staff.STAFF_ID', 'left');
@@ -410,6 +422,7 @@
  		$this->db->join('products', 'products.PRODUCT_ID=sales.PRODUCT_ID', 'left');
  		$this->db->where('MONTH(sales.SALES_DATE)', $month['MONTH']);
  		$this->db->where('YEAR(sales.SALES_DATE)', $month['YEAR']);
+ 		$this->db->where('sales.STATUS', 'Confirmed');
  		$this->db->group_by('sales.PRODUCT_ID');
  		$query=$this->db->get();
  		if($query->num_rows()>0){
@@ -427,7 +440,9 @@
  		$this->db->from('sales');
  		$this->db->join('products', 'products.PRODUCT_ID=sales.PRODUCT_ID', 'left');
  		$this->db->where('YEAR(sales.SALES_DATE)', $year);
+ 		$this->db->where('STATUS', 'Confirmed');
  		$this->db->group_by('sales.PRODUCT_ID');
+
  		$query=$this->db->get();
  		if($query->num_rows()>0){
  			return $query->result();
@@ -476,6 +491,99 @@
  	}
 
 
+ 	//CANCEL SPECIFIC PRODUCT ORDER
+ 	function cancel_specific_order($sales_id){
+ 		$this->db->select('PRODUCT_ID, QUANTITY_SOLD,SALES_DATE');
+ 		$this->db->from('sales');
+ 		$this->db->where('SALES_ID', $sales_id);
+ 		$this->db->where('STATUS', "Confirmed");
+ 		$query=$this->db->get();
+ 		if($query->num_rows()==1){
+
+ 			$sales=$query->row();
+
+ 				$product=$sales->PRODUCT_ID;
+ 				$quantity=$sales->QUANTITY_SOLD;
+ 				$date=$sales->SALES_DATE;
+
+ 				$this->db->set('QUANTITY', "QUANTITY+$quantity", FALSE);
+ 				$this->db->where('PRODUCT_ID', $product);
+ 				$this->db->where('DATE_ADDED', $date);
+ 				if($this->db->update('products_to_sell')){
+
+ 					$this->db->set('STATUS', "Canceled");
+ 					$this->db->where('SALES_ID', $sales_id);
+ 					$this->db->update('sales');		
+
+					return true;
+				}
+				else{
+					return false;
+				}
+ 		}
+ 	}
+
+ 	//FETCH THE TOTAL NUMBER OF ORDERS FOR A DAY
+ 	function fetch_no_order(){
+ 		$this->db->select('SUM(ORDER_NO)');
+ 		$this->db->from('sales');
+ 		$this->db->where('SALES_DATE', date('Y-m-d'));
+ 		$this->db->where('STATUS', 'Confirmed');
+
+ 		$this->db->group_by('ORDER_NO');
+ 		$query=$this->db->get();
+ 		if($query->num_rows()>0){
+ 			return $query->num_rows();
+ 		}
+ 		else{
+ 			return 0;
+ 		}
+ 	}
+
+
+
+
+
+ 	//CLEAR LOGS
+ 	function clear_logs(){
+ 		$this->db->where('LOG_ID >', 0);
+ 		if($this->db->delete('logs')){
+ 			return true;
+ 		}
+ 		else{
+ 			return false;
+ 		}
+ 	}
+	
+	//FETCH THE TOTAL NUMBER OF ORDERS FOR A DAY FOR A PARTICULARC STAFF
+ 	function fetch_no_order_staff(){
+ 		$this->db->select('SUM(ORDER_NO)');
+ 		$this->db->from('sales');
+ 		$this->db->where('SALES_DATE', date('Y-m-d'));
+ 		$this->db->where('STATUS', 'Confirmed');
+ 		$this->db->where('STAFF_ID', $_SESSION['staff_id']);
+ 		$this->db->group_by('ORDER_NO');
+ 		$query=$this->db->get();
+ 		if($query->num_rows()>0){
+ 			return $query->num_rows();
+ 		}
+ 		else{
+ 			return 0;
+ 		}
+ 	}
+
+
+ 	function change_report_individual($report){
+ 		$this->db->select('pin.ID, pin.NAME CUSTOMER, pin.PIN, pin.PHONE, pin.AMOUNT, pin.DATE_CREATED DATE_CREATED, pin.DATE_CLEARED,pin.CLEARED_BY, staff.NAME STAFF_CREATED, pin.PHONE');
+ 		$this->db->from('pin');
+ 		$this->db->join('staff', 'pin.CREATED_BY=staff.STAFF_ID', 'left');
+ 		$this->db->where('pin.CREATED_BY', $report['CREATED_BY']);
+ 		$this->db->where('pin.STATUS', $report['STATUS']);
+ 		$query=$this->db->get();
+ 		if($query->num_rows()>0){
+ 			return $query->result();
+ 		}
+ 	}
 
 
  	

@@ -24,14 +24,14 @@ if($order){
         <table class="table table-bordered table-condensed">
     <thead>
         <tr>
-            <th>ID</th>
+           
             <th>PRODUCT</th>
-            <th>QUANTITY</th>
+            <th>QTY</th>
             <th>AMOUNT</th>
         </tr>
     </thead> <tbody>
     ';
-    $counter=1;
+  
     $total_amount=0;
     foreach ($order as $orders) {
         $total_amount+=$orders->AMOUNT;
@@ -39,15 +39,15 @@ if($order){
         echo"
 
             <tr>
-                <td>$counter</td>
-                <td>$orders->PRODUCT</td>
+              
+                <td>".ucwords($orders->PRODUCT)."</td>
                 <td>$orders->QUANTITY_SOLD</td>
                 <td>$orders->AMOUNT</td>
                 
             </tr>
         ";
 
-        $counter++;
+       
     }
 
 

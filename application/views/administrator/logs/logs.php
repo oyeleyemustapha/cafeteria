@@ -23,7 +23,9 @@
                     <div class="col-md-12">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                
+                                <button class="btn btn-danger pull-right btn-sm deleteRecord">Purge Record</button>
+<div class="clearfix"></div>
+<br>
 
                                 <div class="logDiv"></div>
                                 

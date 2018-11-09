@@ -4,17 +4,7 @@
         <div class="wrapper">
             <div class="container-fluid">
 
-                <!-- Page-Title -->
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="page-title-box">
-                            
-                            <h4 class="page-title">Query Tickets</h4>
-                        </div>
-                    </div>
-                </div>
-
-              
+                <br>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -23,7 +13,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-6 offset-lg-3">
-                                        <input type="text" class="form-control query" name="query" placeholder="Type Order No">
+                                        <input type="text" class="form-control query" name="query" placeholder="Type Order No" required>
 
 
                                         <div class="queryResult"></div>

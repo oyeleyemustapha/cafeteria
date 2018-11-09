@@ -140,6 +140,45 @@ $(document).ready(function(){
 	});
 
 
+   //PURGE LOGS
+  $('.deleteRecord').click(function(){
+    swal({
+      title: 'Are you sure of this ?',
+      text: "You can't be reverted!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#D62C1A',
+      cancelButtonColor: '#2C3E50',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(function () {
+
+        $.post( 
+                base_url_admin+"purge-record", 
+                {action:'purge'}, 
+                function(data){
+                    
+                     $.notify({
+                        message: data
+                    },{
+                        
+                        type: "success",
+                       
+                    }); 
+                     //STAFF LOGS
+                    $('.logDiv').load(base_url_admin+'fetchLogs', function(){
+                      $('.log').DataTable();
+                    });
+                }
+            );
+             $(document).ajaxSend(function(event, xhr, settings) {$(".preloader").fadeIn();});
+             $(document).ajaxComplete(function(event, xhr, settings) {$(".preloader").fadeOut();});
+             return false;
+
+    });
+                      
+    });
+
+
 	//=========================
 	//=========================
 	//====PRODUCTS
@@ -387,8 +426,36 @@ $(document).ready(function(){
 			                    $('#myModal3').modal('hide');
 			                    $('.reports').html(data);
 
+                          //CANCEL SPECIFIC PRODUCT ORDER
+                          $('.cancel-single-order').click(function(){
+                              var sales_id=$(this).attr('id');
 
-								                    //CANCEL ALL ORDER
+                                swal({
+                                    title: 'Are you sure of this ?',
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#D62C1A',
+                                    cancelButtonColor: '#2C3E50',
+                                    confirmButtonText: 'Cancel!'
+                                }).then(function () {
+                                      $.post( 
+                                        base_url_admin+"cancel-product-order", 
+                                        {sales_id:sales_id}, 
+                                        function(data){
+                                            swal({
+                                              title: 'Order Cancelled',
+                                              text: data,
+                                              type: 'success',
+                                              timer:3000,
+                                              showConfirmButton:false
+                                            });  
+                                        });
+                                      });
+                                  $(document).ajaxSend(function(event, xhr, settings) {$(".preloader").fadeIn();});
+                                  $(document).ajaxComplete(function(event, xhr, settings) {$(".preloader").fadeOut();});   
+                          });
+
+								        //CANCEL ALL ORDER
 					              $('.CancelOrderall').click(function(){
 					                  var order_no=$(this).attr('id');
 
@@ -408,7 +475,7 @@ $(document).ready(function(){
 
 					                  
 					                              		swal({
-					                                    title: 'Deleted!',
+					                                    title: 'Order Cancelled',
 					                                    text: data,
 					                                    type: 'success',
 					                                    timer:3000,
@@ -439,9 +506,9 @@ $(document).ready(function(){
     
 
 
-    
-	
+ 
    
 
 
 });
+

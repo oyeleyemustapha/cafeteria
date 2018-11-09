@@ -29,6 +29,7 @@
                                   <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal2">Monthly Sales Report</button>
 
                                   <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal3">Annual Sales Report</button>
+                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModalleftover">Left Over</button>
                                   
                                 </div>
 
@@ -58,6 +59,27 @@
                                                     </div>
                                                     <div class="modal-body">
                                                        <form method="post" action="<?php echo base_url(); ?>daily-sales-reports" target="_blank">
+                                                           <div class="form-group">
+                                                               <input type="text" name="date" class="form-control date" required="" autocomplete="off">
+                                                           </div>
+
+                                                           <button class="btn btn-danger">Generate</button>
+                                                       </form>
+                                                    </div>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div><!-- /.modal -->
+
+
+<div id="myModalleftover" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title mt-0" id="myModalLabel">Generate Left Over Report</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                       <form method="post" action="<?php echo base_url(); ?>left-over" target="_blank">
                                                            <div class="form-group">
                                                                <input type="text" name="date" class="form-control date" required="" autocomplete="off">
                                                            </div>

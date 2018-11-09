@@ -90,7 +90,7 @@
                                             <tr>
                                                 <td>$counter</td>
                                                 <td>$product->PRODUCT</td>
-                                                <td>&#8358; $amount</td>
+                                                <td>&#8358; ".number_format($amount)."</td>
                                                 <td>$product->QUANTITY_SOLD</td>
                                                 <td>$product->ORDER_NO</td>
                                                 <td>$product->NAME</td>
@@ -107,8 +107,8 @@
                                     echo'</tbody>
                                 </table>
 
-                                <h5>TOTAL AMOUNT : &#8358; '.$total_amt.' </h5>
-                                <h5>PROFIT : &#8358; '.$total_profit.' </h5>
+                                <h5>TOTAL AMOUNT : &#8358; '.number_format($total_amt).' </h5>
+                                <h5>PROFIT : &#8358; '.number_format($total_profit).' </h5>
 
 
 
